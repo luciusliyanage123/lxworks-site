@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports: ["8000:8000"]
+    env_file: [./server/.env.example]
+  web:
+    image: node:20
+    working_dir: /app
+    command: sh -c "npm i && npm run dev"
+    ports: ["3000:3000"]
+    volumes: [".:/app"]
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+      - BACKEND_URL=https://lxworks-backend.up.railway.app
+    depends_on: [backend]
